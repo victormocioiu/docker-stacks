@@ -70,7 +70,7 @@ RUN mkdir /home/$NB_USER/work && \
 RUN cd /tmp && \
     mkdir -p $CONDA_DIR && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda2-3.19.0-Linux-x86_64.sh && \
-    echo "646b4d5398f8d76a0664375ee6226611c43ee3d49de3eb03efe7480e3c3b9ebf *Miniconda-3.19.0-Linux-x86_64.sh" | sha256sum -c - && \
+    echo "646b4d5398f8d76a0664375ee6226611c43ee3d49de3eb03efe7480e3c3b9ebf *Miniconda2-3.19.0-Linux-x86_64.sh" | sha256sum -c - && \
     /bin/bash Miniconda2-3.19.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda2-3.19.0-Linux-x86_64.sh && \
     $CONDA_DIR/bin/conda install --quiet --yes conda==3.19.1 && \
