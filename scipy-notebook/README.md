@@ -1,13 +1,11 @@
-![docker pulls](https://img.shields.io/docker/pulls/jupyter/scipy-notebook.svg) ![docker stars](https://img.shields.io/docker/stars/jupyter/scipy-notebook.svg)
-
 # Jupyter Notebook Scientific Python Stack
 
 ## What it Gives You
 
 * Jupyter Notebook 4.1.x
-* Conda Python 3.x and Python 2.7.x environments
-* pandas, matplotlib, scipy, seaborn, scikit-learn, scikit-image, sympy, cython, patsy, statsmodel, cloudpickle, dill, numba, bokeh pre-installed
-* Unprivileged user `jovyan` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/jovyan` and `/opt/conda`
+* Conda and Python 2.7.x environments
+* pandas, matplotlib, scipy, seaborn, scikit-learn, scikit-image, statsmodel
+* Unprivileged user `moc` (uid=1000, configurable, see options) in group `users` (gid=100) with ownership over `/home/moc` and `/opt/conda`
 * [tini](https://github.com/krallin/tini) as the container entrypoint and [start-notebook.sh](../minimal-notebook/start-notebook.sh) as the default command
 * Options for HTTPS, password auth, and passwordless `sudo`
 
@@ -34,34 +32,15 @@ You can sidestep the `start-notebook.sh` script entirely by specifying a command
 You may customize the execution of the Docker container and the Notebook server it contains with the following optional arguments.
 
 * `-e PASSWORD="YOURPASS"` - Configures Jupyter Notebook to require the given password. Should be conbined with `USE_HTTPS` on untrusted networks.
-* `-e USE_HTTPS=yes` - Configures Jupyter Notebook to accept encrypted HTTPS connections. If a `pem` file containing a SSL certificate and key is not found in `/home/jovyan/.ipython/profile_default/security/notebook.pem`, the container will generate a self-signed certificate for you.
-* `-e NB_UID=1000` - Specify the uid of the `jovyan` user. Useful to mount host volumes with specific file ownership. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su jovyan` after adjusting the user id.)
-* `-e GRANT_SUDO=yes` - Gives the `jovyan` user passwordless `sudo` capability. Useful for installing OS packages. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su jovyan` after adding `jovyan` to sudoers.) **You should only enable `sudo` if you trust the user or if the container is running on an isolated host.**
-* `-v /some/host/folder/for/work:/home/jovyan/work` - Host mounts the default working directory on the host to preserve work even when the container is destroyed and recreated (e.g., during an upgrade).
-* `-v /some/host/folder/for/server.pem:/home/jovyan/.local/share/jupyter/notebook.pem` - Mounts a SSL certificate plus key for `USE_HTTPS`. Useful if you have a real certificate for the domain under which you are running the Notebook server.
+* `-e USE_HTTPS=yes` - Configures Jupyter Notebook to accept encrypted HTTPS connections. If a `pem` file containing a SSL certificate and key is not found in `/home/moc/.ipython/profile_default/security/notebook.pem`, the container will generate a self-signed certificate for you.
+* `-e NB_UID=1000` - Specify the uid of the `moc` user. Useful to mount host volumes with specific file ownership. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su moc` after adjusting the user id.)
+* `-e GRANT_SUDO=yes` - Gives the `moc` user passwordless `sudo` capability. Useful for installing OS packages. For this option to take effect, you must run the container with `--user root`. (The `start-notebook.sh` script will `su moc` after adding `moc` to sudoers.) **You should only enable `sudo` if you trust the user or if the container is running on an isolated host.**
+* `-v /some/host/folder/for/work:/home/moc/work` - Host mounts the default working directory on the host to preserve work even when the container is destroyed and recreated (e.g., during an upgrade).
+* `-v /some/host/folder/for/server.pem:/home/moc/.local/share/jupyter/notebook.pem` - Mounts a SSL certificate plus key for `USE_HTTPS`. Useful if you have a real certificate for the domain under which you are running the Notebook server.
 
 ## Conda Environments
 
-The default Python 3.x [Conda environment](http://conda.pydata.org/docs/using/envs.html) resides in `/opt/conda`. A second Python 2.x Conda environment exists in `/opt/conda/envs/python2`. You can [switch to the python2 environment](http://conda.pydata.org/docs/using/envs.html#change-environments-activate-deactivate) in a shell by entering the following:
-
-```
-source activate python2
 ```
 
-You can return to the default environment with this command:
+The commands `ipython`, `python`, `pip`, `easy_install`, and `conda` (among others) are available.
 
-```
-source deactivate
-```
-
-The commands `ipython`, `python`, `pip`, `easy_install`, and `conda` (among others) are available in both environments.
-
-
-## JupyterHub
-
-To use this stack with [JupyterHub](https://jupyterhub.readthedocs.org) and [DockerSpawner](https://github.com/jupyter/dockerspawner),
-set
-
-```python
-c.DockerSpawner.container_image = 'jupyter/scipy-singleuser'
-```
