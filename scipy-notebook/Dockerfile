@@ -1,5 +1,6 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
+# adjusted only for python 2
 FROM jupyter/minimal-notebook
 
 MAINTAINER Jupyter Project <jupyter@googlegroups.com>
@@ -12,27 +13,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-USER jovyan
+USER moc
 
-# Install Python 3 packages
-RUN conda install --quiet --yes \
-    'ipywidgets=4.1*' \
-    'pandas=0.17*' \
-    'matplotlib=1.5*' \
-    'scipy=0.17*' \
-    'seaborn=0.7*' \
-    'scikit-learn=0.17*' \
-    'scikit-image=0.11*' \
-    'sympy=0.7*' \
-    'cython=0.23*' \
-    'patsy=0.4*' \
-    'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.23*' \
-    'bokeh=0.11*' \
-    'h5py=2.5*' \
-    && conda clean -tipsy
 
 # Install Python 2 packages
 RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
@@ -44,16 +26,7 @@ RUN conda create --quiet --yes -p $CONDA_DIR/envs/python2 python=2.7 \
     'seaborn=0.7*' \
     'scikit-learn=0.17*' \
     'scikit-image=0.11*' \
-    'sympy=0.7*' \
-    'cython=0.23*' \
-    'patsy=0.4*' \
     'statsmodels=0.6*' \
-    'cloudpickle=0.1*' \
-    'dill=0.2*' \
-    'numba=0.23*' \
-    'bokeh=0.11*' \
-    'h5py=2.5*' \
-    'pyzmq' \
     && conda clean -tipsy
 
 USER root
@@ -62,4 +35,4 @@ USER root
 # switching at runtime.
 RUN $CONDA_DIR/envs/python2/bin/python -m ipykernel install
 
-USER jovyan
+USER moc
