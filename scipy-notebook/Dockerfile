@@ -1,7 +1,7 @@
 # Copyright (c) Jupyter Development Team.
 # Distributed under the terms of the Modified BSD License.
 # adjusted only for python 2
-FROM mdjoo/jupyter-scipy-server/minimal-notebook
+FROM mdjoo/minimal
 
 MAINTAINER Jupyter Project <jupyter@googlegroups.com>
 
