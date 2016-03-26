@@ -2,6 +2,7 @@
 # Distributed under the terms of the Modified BSD License.
 
 # Debian Jessie image released 2016 March 01.
+# Changed for py 2.7
 FROM debian@sha256:a9c958be96d7d40df920e7041608f2f017af81800ca5ad23e327bc402626b58e
 
 MAINTAINER Jupyter Project <jupyter@googlegroups.com>
@@ -14,7 +15,6 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     git \
     vim \
     jed \
-    emacs \
     wget \
     build-essential \
     python-dev \
@@ -47,36 +47,36 @@ RUN wget --quiet https://github.com/krallin/tini/releases/download/v0.9.0/tini &
 ENV CONDA_DIR /opt/conda
 ENV PATH $CONDA_DIR/bin:$PATH
 ENV SHELL /bin/bash
-ENV NB_USER jovyan
+ENV NB_USER moc
 ENV NB_UID 1000
 ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
-# Create jovyan user with UID=1000 and in the 'users' group
+# Create moc user with UID=1000 and in the 'users' group
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
     mkdir -p /opt/conda && \
-    chown jovyan /opt/conda
+    chown moc /opt/conda
 
-USER jovyan
+USER moc
 
-# Setup jovyan home directory
+# Setup moc home directory
 RUN mkdir /home/$NB_USER/work && \
     mkdir /home/$NB_USER/.jupyter && \
     mkdir /home/$NB_USER/.local && \
     echo "cacert=/etc/ssl/certs/ca-certificates.crt" > /home/$NB_USER/.curlrc
 
-# Install conda as jovyan
+# Install conda as moc
 RUN cd /tmp && \
     mkdir -p $CONDA_DIR && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-3.19.0-Linux-x86_64.sh && \
-    echo "9ea57c0fdf481acf89d816184f969b04bc44dea27b258c4e86b1e3a25ff26aa0 *Miniconda3-3.19.0-Linux-x86_64.sh" | sha256sum -c - && \
-    /bin/bash Miniconda3-3.19.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda3-3.19.0-Linux-x86_64.sh && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda2-3.19.0-Linux-x86_64.sh && \
+    echo "646b4d5398f8d76a0664375ee6226611c43ee3d49de3eb03efe7480e3c3b9ebf *Miniconda-3.19.0-Linux-x86_64.sh" | sha256sum -c - && \
+    /bin/bash Miniconda2-3.19.0-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda2-3.19.0-Linux-x86_64.sh && \
     $CONDA_DIR/bin/conda install --quiet --yes conda==3.19.1 && \
     conda clean -tipsy
 
-# Install Jupyter notebook as jovyan
+# Install Jupyter notebook as moc
 RUN conda install --quiet --yes \
     'notebook=4.1*' \
     terminado \
@@ -95,5 +95,5 @@ COPY start-notebook.sh /usr/local/bin/
 COPY jupyter_notebook_config.py /home/$NB_USER/.jupyter/
 RUN chown -R $NB_USER:users /home/$NB_USER/.jupyter
 
-# Switch back to jovyan to avoid accidental container runs as root
-USER jovyan
+# Switch back to moc to avoid accidental container runs as root
+USER moc
